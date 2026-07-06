@@ -8,14 +8,14 @@
 ---
 
 ## Problem Description
-This repository contains a comparative study of the **Unweighted Set Cover Problem (SCP)**. Given a universe of elements $U$ and a collection of subsets $S$ where each subset covers a portion of $U$, the objective is to find the minimum number of subsets required to cover every element in $U$ at least once. Because SCP is NP-complete in its decision form and NP-hard in its optimization form, finding exact solutions becomes computationally intractable as the input size scales.
+This repository contains a comparative study of the **Unweighted Set Cover Problem (SCP)**. Given a universe of elements $`U`$ and a collection of subsets $`S`$ where each subset covers a portion of $`U`$, the objective is to find the minimum number of subsets required to cover every element in $`U`$ at least once. Because SCP is NP-complete in its decision form and NP-hard in its optimization form, finding exact solutions becomes computationally intractable as the input size scales.
 
 ### Implemented Algorithms
 To analyze the trade-offs between execution speed and solution quality, we implement and benchmark four distinct algorithmic approaches:
 1. **Greedy Approximation ($\Theta(m \cdot n)$):** A deterministic heuristic baseline that picks the locally optimal subset at each step.
 2. **Integer Linear Programming (ILP) with Branch-and-Bound ($\Theta(2^m)$ worst-case):** An exact solver to establish mathematical optimality on smaller instances, restricted by a strict 5-minute execution timeout.
 3. **Harmony Search (HS) ($\Theta(T \cdot HMS \cdot m)$):** A nature-inspired metaheuristic utilizing a specialized binary repair function to handle uncovered universe elements.
-4. **Genetic Algorithm (GA) ($\Theta(G · P · m)$):** An evolutionary metaheuristic evaluating population-based solution generation via selection, crossover, and mutation.
+4. **Genetic Algorithm (GA) ($\Theta(G \cdot P \cdot m)$):** An evolutionary metaheuristic evaluating population-based solution generation via selection, crossover, and mutation.
 
 ---
 
