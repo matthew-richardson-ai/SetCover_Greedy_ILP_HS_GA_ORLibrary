@@ -39,3 +39,27 @@ This repository adheres to strict academic project organization guidelines:
 ├── /references      # Academic papers and theoretical documentation
 ├── README.md        # Project overview and reproduction instructions
 └── requirements.txt # System dependencies for environment replication
+
+
+
+---
+
+## Instructions for Execution & Environment Replication
+
+Follow these step-by-step instructions to clone the repository, set up the dependencies, and execute the benchmark pipeline.
+
+### 1. Prerequisites
+Ensure you have **Python 3.10+** and `pip` installed on your host machine.
+
+### 2. Environment Setup
+Open your terminal or PowerShell window and run the following commands to clone the project and install the necessary math libraries (such as NumPy):
+
+```bash
+# Clone the repository down to your local machine
+git clone https://github.com/matthew-richardson-ai/SetCover_Greedy_ILP_HS_GA_ORLibrary.git
+
+# Move into the project root directory
+cd SetCover_Greedy_ILP_HS_GA_ORLibrary
+
+# Install the verified environment dependencies
+pip install -r requirements.txt
