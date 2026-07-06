@@ -1,7 +1,7 @@
 # Comparative Algorithmic Analysis of the Unweighted Set Cover Problem
 
 ## Team Members & Contributors
-* [Ian Phillips](https://github.com/(Placeholder) - Data Parsing, Greedy, & ILP Implementation
+* [Ian Phillips](iaphillips42@tntech.edu) - Data Parsing, Greedy, & ILP Implementation
 * [Abdullah Javed](https://github.com/Abdullah-Javed-023)) - Harmony Search & Binary Repair Function
 * [Matthew Richardson](https://github.com/matthew-richardson-ai) - Genetic Algorithm, Plotting, & Formatting
 
