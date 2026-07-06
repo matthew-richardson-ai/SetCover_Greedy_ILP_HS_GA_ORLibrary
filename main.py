@@ -2,7 +2,7 @@ import os
 import time
 
 # Pulling your optimization engine from src
-from src.genetic_algorithm import run_genetic_algorithm
+from Code.genetic_algorithm import run_genetic_algorithm
 
 
 def load_or_library_instance(file_path):
