@@ -31,16 +31,14 @@ Per instructor feedback, synthetic input scaling sequences leverage exponential 
 This repository adheres to strict academic project organization guidelines:
 
 ```text
-├── /Code            # Modular Python source files (Parser, Algorithms, Main Pipeline)
-├── /References         # Raw experimental output logs (CSV/JSON formats)
-├── /Reports          # High-resolution runtime, optimality gap, and standard deviation plots
-├── /Results         # Intermediate status updates and final research paper
-├── /Slides          # Presentation slide decks
-├── /Tables and Graphs      # Academic papers and theoretical documentation
-├── README.md        # Project overview and reproduction instructions
-└── requirements.txt # System dependencies for environment replication
-
-
+├── /Code              # Modular Python source files (Parser, Algorithms, Main Pipeline)
+├── /References        # Raw academic benchmark datasets from Beasley's OR-Library
+├── /Reports           # Intermediate progress updates and final research papers
+├── /Results           # Output data logs and performance metric files (.csv, .txt)
+├── /Slides            # Presentation slide decks for project delivery
+├── /Tables & Graphs   # High-resolution runtime, optimality gap, and standard deviation plots
+├── README.md          # Project overview and reproduction instructions
+└── requirements.txt   # System dependencies for environment replication
 
 ---
 
@@ -63,3 +61,22 @@ cd SetCover_Greedy_ILP_HS_GA_ORLibrary
 
 # Install the verified environment dependencies
 pip install -r requirements.txt
+
+---
+
+Generative AI Statement:
+
+The development of this repository involved the collaborative assistance of generative AI models (including Gemini, Claude, and xAI) integrated across our development environments (VS Code and RStudio/Posit).
+
+Scope of Assistance:
+
+Troubleshooting platform-independent shell mechanics, PowerShell tracking indices, and local-to-remote directory capitalization behaviors and repository conflicts.
+
+Reviewing file-parsing logic (load_or_library_instance) to verify compatibility with Beasley's OR-Library continuous whitespace-separated string stream format.
+
+Code verification and optimization, along with error tracking and bug fixes within code logic.
+
+Documentation Formatting and report checklists for organization and optimization.
+
+The human authors remain fully responsible for the implementation, validation of benchmark runtime data, and the integrity of the optimization engine outputs.
+All core algorithmic design logic, data optimization pipelines, and experimental execution metrics were thoroughly reviewed, executed, and validated under the direct oversight and full accountability of the human authors
