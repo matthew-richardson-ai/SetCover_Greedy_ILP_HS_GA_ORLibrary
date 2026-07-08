@@ -1,19 +1,19 @@
 import os
 import time
 
-# Pulling your optimization engine from src
+# Pulls the optimization engine from src
 from Code.genetic_algorithm import run_genetic_algorithm
 
 
 def load_or_library_instance(file_path):
     """
-    HUMAN TRANSLATION: This function opens the raw OR-Library text file (like scp41.txt),
-    cleans up the formatting, and builds the mathematical data structure our algorithm needs.
+    Opens the raw OR-Library text file (in references/scp41.txt), 
+    cleans up the formatting, and builds the mathematical data structure.
 
-    Beasley's OR-Library files are formatted as a giant, continuous stream of numbers separated
-    by spaces, which makes standard line-by-line file reading completely useless.
+    Note: Beasley's OR-Library files are formatted as a continuous stream of numbers 
+    separated by spaces, which makes standard line-by-line file reading useless.
     """
-    # Defensive check: Make sure the file actually exists before trying to read it
+    #  We want to make sure the file actually exists before trying to read it
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Data instance missing from directory: {file_path}")
 
@@ -28,7 +28,7 @@ def load_or_library_instance(file_path):
     # An iterator lets us grab the numbers one by one in order via the next() function
     token_iter = iter(tokens)
 
-    # STEP 1: The very first two numbers in an OR-Library file are ALWAYS the metadata header.
+    # STEP 1: The very first two numbers in an OR-Library file are always the metadata header.
     universe_size = int(next(token_iter))  # Number of rows (Total elements to cover)
     num_subsets = int(next(token_iter))  # Number of columns (Total available subsets)
 
@@ -105,7 +105,7 @@ def main():
         print(f" Optimal Cover Size     : {best_fitness_score} subsets utilized")
         print("=" * 50)
 
-        # Quick data check to prove to your professor that the result is functional code
+        # Quick data check for functional code verification
         selected_indices = [
             idx for idx, selected in enumerate(best_cover_chromosome) if selected == 1
         ]
@@ -115,7 +115,7 @@ def main():
     except FileNotFoundError:
         print(f"\n[ERROR] Missing data file: '{target_instance}'")
         print(
-            "-> Make sure you put your OR-Library text files inside the 'references/' directory."
+            "-> Make sure the OR-Library text files are inside the 'references/' directory."
         )
     except Exception as e:
         print(f"\n[CRITICAL ERROR] Execution broken: {e}")
