@@ -32,11 +32,11 @@ This repository adheres to strict academic project organization guidelines:
 
 ```text
 ├── /Code            # Modular Python source files (Parser, Algorithms, Main Pipeline)
-├── /results         # Raw experimental output logs (CSV/JSON formats)
-├── /graphs          # High-resolution runtime, optimality gap, and standard deviation plots
-├── /report          # Intermediate status updates and final research paper
-├── /slides          # Presentation slide decks
-├── /references      # Academic papers and theoretical documentation
+├── /References         # Raw experimental output logs (CSV/JSON formats)
+├── /Reports          # High-resolution runtime, optimality gap, and standard deviation plots
+├── /Results         # Intermediate status updates and final research paper
+├── /Slides          # Presentation slide decks
+├── /Tables and Graphs      # Academic papers and theoretical documentation
 ├── README.md        # Project overview and reproduction instructions
 └── requirements.txt # System dependencies for environment replication
 
