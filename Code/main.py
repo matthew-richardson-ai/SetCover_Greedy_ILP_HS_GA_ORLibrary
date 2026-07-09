@@ -5,7 +5,7 @@ import numpy as np
 
 # Pulls the main execution loop for our Genetic Algorithm from the companion module
 from Code.genetic_algorithm import run_genetic_algorithm
-
+from Code.harmony_search import run_harmony_search
 
 def load_or_library_instance(file_path):
     """
@@ -98,13 +98,27 @@ def main():
 
         execution_runtime = time.time() - start_time
 
+        print("\n[ENGINE] Booting up Harmony Search optimization loop...")
+        start_time_hs = time.time()
+        
+        best_hs_chromosome, best_hs_fitness_score = run_harmony_search(
+            subsets=subsets, 
+            universe_size=universe_size, 
+            hms=30, hmcr=0.85, par=0.1, max_iter=300
+        )
+        
+        hs_execution_runtime = time.time() - start_time_hs
+
         # 4. Final output display for your professor's grading script / team analysis
         print("\n" + "=" * 50)
         print("                 BENCHMARK METRICS SUMMARY        ")
         print("=" * 50)
         print(f" Target Benchmark File  : {target_instance}")
-        print(f" Computational Runtime  : {execution_runtime:.4f} seconds")
-        print(f" Optimal Cover Size     : {best_fitness_score} subsets utilized")
+        print(f" GA Runtime             : {execution_runtime:.4f} seconds")
+        print(f" GA Optimal Cover Size  : {best_fitness_score} subsets utilized")
+        print("-" * 50)
+        print(f" HS Runtime             : {hs_execution_runtime:.4f} seconds")
+        print(f" HS Optimal Cover Size  : {best_hs_fitness_score} subsets utilized")
         print("=" * 50)
 
         # Quick data check for functional code verification
@@ -164,7 +178,7 @@ def run_full_experiment():
 
             # 1. Load the actual data using your existing parser
             # (Adjust the function name if yours is slightly different, e.g., load_or_library_instance)
-            universe_size, subsets = load_or_library_instance(instance)
+            subsets, universe_size = load_or_library_instance(instance)
 
             ga_runtimes = []
             ga_covers = []
@@ -175,7 +189,7 @@ def run_full_experiment():
 
                 # 2. Run your actual Genetic Algorithm loop
                 best_chromosome, best_fitness = run_genetic_algorithm(
-                    universe_size, subsets
+                    subsets, universe_size
                 )
 
                 end_time = time.time()
@@ -203,6 +217,35 @@ def run_full_experiment():
             print(
                 f" -> Finished 10 trials. Avg Runtime: {runtime_avg:.4f}s | Avg Cover: {cover_avg:.1f}"
             )
+
+            hs_runtimes = []
+            hs_covers = []
+            
+            for trial in range(10):
+                start_time = time.time()
+                best_chromosome, best_fitness = run_harmony_search(subsets, universe_size)
+                end_time = time.time()
+                
+                hs_runtimes.append(end_time - start_time)
+                hs_covers.append(best_fitness)
+                
+            hs_runtime_avg = np.mean(hs_runtimes)
+            hs_runtime_std = np.std(hs_runtimes)
+            hs_cover_avg = np.mean(hs_covers)
+            hs_cover_std = np.std(hs_covers)
+            
+            # Write HS row to CSV
+            writer.writerow([
+                os.path.basename(instance),
+                "Harmony Search",
+                10,
+                f"{hs_runtime_avg:.4f}",
+                f"{hs_runtime_std:.4f}",
+                f"{hs_cover_avg:.1f}",
+                f"{hs_cover_std:.2f}",
+                "TBD"
+            ])
+            print(f" -> Finished HS 10 trials. Avg Runtime: {hs_runtime_avg:.4f}s | Avg Cover: {hs_cover_avg:.1f}")
 
     print("\n==================================================")
     print(f"[SUCCESS] Batch execution complete. Saved to: {results_file}")
