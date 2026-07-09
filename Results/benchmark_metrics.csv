@@ -1,0 +1,7 @@
+Instance,Algorithm,Trials,Runtime_Avg,Runtime_Std,CoverSize_Avg,CoverSize_Std,Optimality_Gap
+synth_64.txt,Genetic Algorithm,10,1.9158,0.0362,2.0,0.00,TBD (Awaiting ILP Baseline)
+synth_128.txt,Genetic Algorithm,10,2.5825,0.0167,2.0,0.00,TBD (Awaiting ILP Baseline)
+synth_256.txt,Genetic Algorithm,10,5.5278,2.4607,3.5,0.67,TBD (Awaiting ILP Baseline)
+synth_512.txt,Genetic Algorithm,10,9.6702,3.5012,45.1,2.39,TBD (Awaiting ILP Baseline)
+synth_1024.txt,Genetic Algorithm,10,24.1992,9.7993,184.7,4.63,TBD (Awaiting ILP Baseline)
+synth_2048.txt,Genetic Algorithm,10,37.0187,15.7770,552.9,6.39,TBD (Awaiting ILP Baseline)

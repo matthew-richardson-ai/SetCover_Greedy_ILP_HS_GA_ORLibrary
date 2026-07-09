@@ -1,16 +1,18 @@
 import os
 import time
+import csv
+import numpy as np
 
-# Pulls the optimization engine from src
+# Pulls the main execution loop for our Genetic Algorithm from the companion module
 from Code.genetic_algorithm import run_genetic_algorithm
 
 
 def load_or_library_instance(file_path):
     """
-    Opens the raw OR-Library text file (in references/scp41.txt), 
+    Opens the raw OR-Library text file (in ../References/scp41.txt),
     cleans up the formatting, and builds the mathematical data structure.
 
-    Note: Beasley's OR-Library files are formatted as a continuous stream of numbers 
+    Note: Beasley's OR-Library files are formatted as a continuous stream of numbers
     separated by spaces, which makes standard line-by-line file reading useless.
     """
     #  We want to make sure the file actually exists before trying to read it
@@ -66,7 +68,7 @@ def main():
 
     # This points directly to the data file inside your references folder.
     # Swap out 'scp41.txt' with any other benchmark instance file to test different sets.
-    target_instance = "references/scp41.txt"
+    target_instance = "../References/scp41.txt"
 
     try:
         # 1. Parse and extract the data
@@ -121,5 +123,93 @@ def main():
         print(f"\n[CRITICAL ERROR] Execution broken: {e}")
 
 
+# ... Keep all your existing imports and your load_or_library_instance() function up here ...
+
+
+def run_full_experiment():
+    # Array of benchmark files scaling exponentially
+    instances = [
+        "References/Synthetic/synth_64.txt",
+        "References/Synthetic/synth_128.txt",
+        "References/Synthetic/synth_256.txt",
+        "References/Synthetic/synth_512.txt",
+        "References/Synthetic/synth_1024.txt",
+        "References/Synthetic/synth_2048.txt",
+    ]
+
+    results_file = "Results/benchmark_metrics.csv"
+    headers = [
+        "Instance",
+        "Algorithm",
+        "Trials",
+        "Runtime_Avg",
+        "Runtime_Std",
+        "CoverSize_Avg",
+        "CoverSize_Std",
+        "Optimality_Gap",
+    ]
+
+    print("==================================================")
+    print("        LAUNCHING LIVE BENCHMARK ENGINE           ")
+    print("==================================================")
+
+    os.makedirs("Results", exist_ok=True)
+
+    with open(results_file, mode="w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+
+        for instance in instances:
+            print(f"\n[BENCHMARK] Processing: {instance}")
+
+            # 1. Load the actual data using your existing parser
+            # (Adjust the function name if yours is slightly different, e.g., load_or_library_instance)
+            universe_size, subsets = load_or_library_instance(instance)
+
+            ga_runtimes = []
+            ga_covers = []
+
+            # Run 10 independent trials per file to collect standard deviation
+            for trial in range(10):
+                start_time = time.time()
+
+                # 2. Run your actual Genetic Algorithm loop
+                best_chromosome, best_fitness = run_genetic_algorithm(
+                    universe_size, subsets
+                )
+
+                end_time = time.time()
+
+                ga_runtimes.append(end_time - start_time)
+                ga_covers.append(best_fitness)
+
+            # Compute statistical metrics requested by the instructor
+            runtime_avg = np.mean(ga_runtimes)
+            runtime_std = np.std(ga_runtimes)
+            cover_avg = np.mean(ga_covers)
+            cover_std = np.std(ga_covers)
+
+            # Write row to CSV
+            writer.writerow([
+                os.path.basename(instance),
+                "Genetic Algorithm",
+                10,
+                f"{runtime_avg:.4f}",
+                f"{runtime_std:.4f}",
+                f"{cover_avg:.1f}",
+                f"{cover_std:.2f}",
+                "TBD (Awaiting ILP Baseline)",
+            ])
+            print(
+                f" -> Finished 10 trials. Avg Runtime: {runtime_avg:.4f}s | Avg Cover: {cover_avg:.1f}"
+            )
+
+    print("\n==================================================")
+    print(f"[SUCCESS] Batch execution complete. Saved to: {results_file}")
+    print("==================================================")
+
+
+# This replaces your old single-run block
 if __name__ == "__main__":
+    run_full_experiment()
     main()
