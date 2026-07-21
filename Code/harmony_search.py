@@ -1,3 +1,19 @@
+"""
+===============================================================================
+CSC 2400 — Term Project: Unweighted Set Cover Problem (SCP)
+Module: Harmony Search (HS) & Binary Repair Function
+Author: Abdullah Javed
+===============================================================================
+Description:
+    Nature-inspired metaheuristic utilizing Harmony Memory (HM), Harmony Memory
+    Considering Rate (HMCR), and Pitch Adjusting Rate (PAR). Includes a custom 
+    three-stage binary repair function to guarantee 100% universe coverage.
+
+Complexity:
+    Theta(T * HMS * m) where T is max_iter, HMS is Harmony Memory Size, 
+    and m is total available subsets.
+===============================================================================
+"""
 import numpy as np
 
 # --- 1. REPAIR LOGIC ---
