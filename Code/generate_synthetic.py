@@ -1,10 +1,24 @@
-import numpy as np
+"""
+===============================================================================
+CSC 2400 — Term Project: Unweighted Set Cover Problem (SCP)
+Module: Synthetic Instance Generator (OR-Library Format)
+Author: Matthew Richardson
+===============================================================================
+Description:
+    Generates scalable benchmark datasets following a powers-of-2 sequence.
+    Exports files in Beasley's OR-Library sparse column format to ensure 100%
+    compatibility with the project parser.
+===============================================================================
+"""
+
 import os
+import numpy as np
 
 
 def generate_synthetic_instance(num_elements, num_subsets, density=0.1, seed=42):
-    """
-    This function generates a valid binary matrix for the Unweighted Set Covering Problem.
+    """This function generates a valid binary matrix for the Unweighted Set
+    Covering Problem.
+
     Rows = Elements to cover (Universe)
     Columns = Subsets available
     """
@@ -43,9 +57,22 @@ def save_synthetic_dataset():
 
         # Write out using standard spaces matching the Beasley standard parsing interface
         with open(filename, "w") as f:
+            # Header: rows (universe size) and cols (num subsets)
             f.write(f"{rows} {cols}\n")
+
+            # Beasley OR-Library expects cost array for subsets (unweighted = 1.0 each)
+            f.write(" ".join(["1"] * cols) + "\n")
+
+            # Beasley OR-Library row mapping:
+            # For each element row: [count of covering columns] [1-based column indices...]
             for row in matrix:
-                f.write(" ".join(map(str, row)) + "\n")
+                # Find indices where subset covers row (+1 for 1-based Beasley indexing)
+                covering_cols = [
+                    str(col_idx + 1)
+                    for col_idx, is_covered in enumerate(row)
+                    if is_covered == 1
+                ]
+                f.write(f"{len(covering_cols)} " + " ".join(covering_cols) + "\n")
 
         print(f"[GENERATOR] Created: {filename} ({rows}x{cols})")
     print("==================================================\n")

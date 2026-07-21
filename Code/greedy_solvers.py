@@ -1,14 +1,26 @@
 """
-Greedy Approximation Heuristic for the Unweighted Set Covering Problem.
+===============================================================================
+CSC 2400 — Term Project: Unweighted Set Cover Problem (SCP)
+Module: Deterministic Greedy Approximation Heuristic
+Author: Ian Phillips
+===============================================================================
+Description:
+    Constructs a set cover solution using a deterministic greedy heuristic:
+    at every step, selects the subset that covers the largest number of
+    uncovered universe elements until 100% coverage is achieved.
+
+Complexity:
+    Theta(m * n) amortized using set intersections, where m is total subsets
+    and n is universe size.
+===============================================================================
 """
-from Code.greedy_solvers import run_greedy_approach
 
 import numpy as np
 
 
 def run_greedy_approach(subsets, universe_size):
-    """
-    Constructs a set cover solution using the classic greedy heuristic:
+    """Constructs a set cover solution using the classic greedy heuristic:
+
     at every step, select the subset that covers the largest number of
     still-uncovered universe elements, until the universe is fully covered.
     """

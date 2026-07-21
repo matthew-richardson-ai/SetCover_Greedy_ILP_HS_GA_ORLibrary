@@ -1,3 +1,16 @@
+"""
+===============================================================================
+CSC 2400 — Term Project: Unweighted Set Cover Problem (SCP)
+Module: Genetic Algorithm Heuristic
+Author: Matthew Richardson
+===============================================================================
+Description:
+    Implements a genetic algorithm to approximate solutions for the unweighted
+    set cover problem. Includes initialization, repair logic, fitness evaluation,
+    selection, crossover, mutation, and the main evolutionary loop.
+===============================================================================
+"""
+
 import numpy as np
 
 
@@ -98,9 +111,9 @@ def run_genetic_algorithm(
     # 2. Begin the generational loop
     for generation in range(generations):
         # Calculate fitness for the current population
-        fitness_scores = np.array(
-            [calculate_fitness(chrom, subsets, universe_size) for chrom in population]
-        )
+        fitness_scores = np.array([
+            calculate_fitness(chrom, subsets, universe_size) for chrom in population
+        ])
 
         # Track the best individual in this generation
         current_best_idx = np.argmin(fitness_scores)

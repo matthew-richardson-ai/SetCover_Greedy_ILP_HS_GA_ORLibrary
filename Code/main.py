@@ -1,19 +1,45 @@
+"""
+===============================================================================
+CSC 2400 — Term Project: Unweighted Set Cover Problem (SCP) Benchmark Driver
+Authors: Ian Phillips, Abdullah Javed, Matthew Richardson
+===============================================================================
+
+HOW TO RUN THIS CODE FROM THE COMMAND LINE (CMD / TERMINAL):
+
+1. Prerequisites:
+   Ensure Python 3.10+ and required packages are installed:
+       $ pip install -r requirements.txt
+
+2. Execution:
+   Navigate to the project root directory and execute the main driver script:
+       $ cd SetCover_Greedy_ILP_HS_GA_ORLibrary
+       $ python Code/main.py
+
+3. Expected Execution Output:
+   - Console logs tracking algorithm execution progress.
+   - Comparative statistical metrics written to 'Results/benchmark_metrics.csv'.
+===============================================================================
+"""
+
+import csv
 import os
 import time
-import csv
 import numpy as np
 
-# Pulls the main execution loop for our Genetic Algorithm from the companion module
+# Pulls the main execution loop for our algorithms from their companion modules
 from Code.genetic_algorithm import run_genetic_algorithm
+from Code.greedy_solvers import run_greedy_approach
 from Code.harmony_search import run_harmony_search
 
-def load_or_library_instance(file_path):
-    """
-    Opens the raw OR-Library text file (in ../References/scp41.txt),
-    cleans up the formatting, and builds the mathematical data structure.
 
-    Note: Beasley's OR-Library files are formatted as a continuous stream of numbers
-    separated by spaces, which makes standard line-by-line file reading useless.
+def load_or_library_instance(file_path):
+    """Opens the raw OR-Library text file (in ../References/scp41.txt), cleans
+
+    up the formatting, and builds the mathematical data structure.
+
+    Note: Beasley's OR-Library files are formatted as a continuous stream of
+    numbers separated by spaces, which makes standard line-by-line file
+    reading useless.
     """
     #  We want to make sure the file actually exists before trying to read it
     if not os.path.exists(file_path):
@@ -100,14 +126,26 @@ def main():
 
         print("\n[ENGINE] Booting up Harmony Search optimization loop...")
         start_time_hs = time.time()
-        
+
         best_hs_chromosome, best_hs_fitness_score = run_harmony_search(
-            subsets=subsets, 
-            universe_size=universe_size, 
-            hms=30, hmcr=0.85, par=0.1, max_iter=300
+            subsets=subsets,
+            universe_size=universe_size,
+            hms=30,
+            hmcr=0.85,
+            par=0.1,
+            max_iter=300,
         )
-        
+
         hs_execution_runtime = time.time() - start_time_hs
+
+        print("\n[ENGINE] Booting up Greedy Approximation Heuristic execution...")
+        start_time_greedy = time.time()
+
+        greedy_chromosome, greedy_fitness_score = run_greedy_approach(
+            subsets=subsets, universe_size=universe_size
+        )
+
+        greedy_execution_runtime = time.time() - start_time_greedy
 
         # 4. Final output display for your professor's grading script / team analysis
         print("\n" + "=" * 50)
@@ -119,6 +157,9 @@ def main():
         print("-" * 50)
         print(f" HS Runtime             : {hs_execution_runtime:.4f} seconds")
         print(f" HS Optimal Cover Size  : {best_hs_fitness_score} subsets utilized")
+        print("-" * 50)
+        print(f" Greedy Runtime         : {greedy_execution_runtime:.4f} seconds")
+        print(f" Greedy Cover Size      : {greedy_fitness_score} subsets utilized")
         print("=" * 50)
 
         # Quick data check for functional code verification
@@ -131,13 +172,10 @@ def main():
     except FileNotFoundError:
         print(f"\n[ERROR] Missing data file: '{target_instance}'")
         print(
-            "-> Make sure the OR-Library text files are inside the 'references/' directory."
+            "-> Make sure the OR-Library text files are inside the 'References/' directory."
         )
     except Exception as e:
         print(f"\n[CRITICAL ERROR] Execution broken: {e}")
-
-
-# ... Keep all your existing imports and your load_or_library_instance() function up here ...
 
 
 def run_full_experiment():
@@ -177,9 +215,42 @@ def run_full_experiment():
             print(f"\n[BENCHMARK] Processing: {instance}")
 
             # 1. Load the actual data using your existing parser
-            # (Adjust the function name if yours is slightly different, e.g., load_or_library_instance)
             subsets, universe_size = load_or_library_instance(instance)
 
+            # --- GREEDY HEURISTIC TRIALS ---
+            greedy_runtimes = []
+            greedy_covers = []
+
+            for trial in range(10):
+                start_time = time.time()
+                best_chromosome, best_fitness = run_greedy_approach(
+                    subsets, universe_size
+                )
+                end_time = time.time()
+
+                greedy_runtimes.append(end_time - start_time)
+                greedy_covers.append(best_fitness)
+
+            greedy_runtime_avg = np.mean(greedy_runtimes)
+            greedy_runtime_std = np.std(greedy_runtimes)
+            greedy_cover_avg = np.mean(greedy_covers)
+            greedy_cover_std = np.std(greedy_covers)
+
+            writer.writerow([
+                os.path.basename(instance),
+                "Greedy Heuristic",
+                10,
+                f"{greedy_runtime_avg:.4f}",
+                f"{greedy_runtime_std:.4f}",
+                f"{greedy_cover_avg:.1f}",
+                f"{greedy_cover_std:.2f}",
+                "TBD (Awaiting ILP Baseline)",
+            ])
+            print(
+                f" -> Finished Greedy 10 trials. Avg Runtime: {greedy_runtime_avg:.4f}s | Avg Cover: {greedy_cover_avg:.1f}"
+            )
+
+            # --- GENETIC ALGORITHM TRIALS ---
             ga_runtimes = []
             ga_covers = []
 
@@ -215,25 +286,28 @@ def run_full_experiment():
                 "TBD (Awaiting ILP Baseline)",
             ])
             print(
-                f" -> Finished 10 trials. Avg Runtime: {runtime_avg:.4f}s | Avg Cover: {cover_avg:.1f}"
+                f" -> Finished GA 10 trials. Avg Runtime: {runtime_avg:.4f}s | Avg Cover: {cover_avg:.1f}"
             )
 
+            # --- HARMONY SEARCH TRIALS ---
             hs_runtimes = []
             hs_covers = []
-            
+
             for trial in range(10):
                 start_time = time.time()
-                best_chromosome, best_fitness = run_harmony_search(subsets, universe_size)
+                best_chromosome, best_fitness = run_harmony_search(
+                    subsets, universe_size
+                )
                 end_time = time.time()
-                
+
                 hs_runtimes.append(end_time - start_time)
                 hs_covers.append(best_fitness)
-                
+
             hs_runtime_avg = np.mean(hs_runtimes)
             hs_runtime_std = np.std(hs_runtimes)
             hs_cover_avg = np.mean(hs_covers)
             hs_cover_std = np.std(hs_covers)
-            
+
             # Write HS row to CSV
             writer.writerow([
                 os.path.basename(instance),
@@ -243,9 +317,11 @@ def run_full_experiment():
                 f"{hs_runtime_std:.4f}",
                 f"{hs_cover_avg:.1f}",
                 f"{hs_cover_std:.2f}",
-                "TBD"
+                "TBD (Awaiting ILP Baseline)",
             ])
-            print(f" -> Finished HS 10 trials. Avg Runtime: {hs_runtime_avg:.4f}s | Avg Cover: {hs_cover_avg:.1f}")
+            print(
+                f" -> Finished HS 10 trials. Avg Runtime: {hs_runtime_avg:.4f}s | Avg Cover: {hs_cover_avg:.1f}"
+            )
 
     print("\n==================================================")
     print(f"[SUCCESS] Batch execution complete. Saved to: {results_file}")
