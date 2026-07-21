@@ -68,7 +68,7 @@ def main():
 
     # This points directly to the data file inside your references folder.
     # Swap out 'scp41.txt' with any other benchmark instance file to test different sets.
-    target_instance = "../References/scp41.txt"
+    target_instance = "References/scp41.txt"
 
     try:
         # 1. Parse and extract the data
