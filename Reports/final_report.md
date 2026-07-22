@@ -76,10 +76,10 @@ Universe size = 200 | Candidate subsets = 1,000
 
 | Algorithm | Avg Runtime | Subsets Selected | Optimality Gap |
 | :--- | :--- | :--- | :--- |
-| ILP Exact Solver | 0.0391s | **5** | 0.00% (baseline) |
+| ILP Exact Solver | 0.0285s | **5** | 0.00% (baseline) |
 | Greedy Heuristic | < 0.0001s | 6 | +20.00% |
-| Genetic Algorithm | 0.9723s | **5** | 0.00% |
-| Harmony Search | 0.0116s | **5** | 0.00% |
+| Genetic Algorithm | 0.7609s | **5** | 0.00% |
+| Harmony Search | 0.0092s | **5** | 0.00% |
 
 On the real-world benchmark instance, both GA and Harmony Search matched the exact ILP optimal solution of 5 subsets. Greedy selected 6, landing 20% above optimal. This was our strongest result for the metaheuristics.
 
@@ -87,28 +87,36 @@ On the real-world benchmark instance, both GA and Harmony Search matched the exa
 
 ### Table 2: Synthetic Scaling Suite (10 trials per stochastic algorithm)
 
-| Instance | Algorithm | Runtime Avg | Runtime Std | Cover Size Avg | Cover Size Std | Optimality Gap |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| synth_64 | ILP Exact Solver | 0.0452s | -- | 4.0 | -- | 0.00% |
-| synth_64 | Greedy Heuristic | 0.0001s | 0.0000 | 4.0 | 0.00 | 0.00% |
-| synth_64 | Genetic Algorithm | 5.3616s | 2.7542 | 4.4 | 0.49 | 10.00% |
-| synth_64 | Harmony Search | 0.0732s | 0.0074 | 14.2 | 0.75 | 255.00% |
-| synth_128 | ILP Exact Solver | 0.0372s | -- | 5.0 | -- | 0.00% |
-| synth_128 | Greedy Heuristic | 0.0002s | 0.0000 | 6.0 | 0.00 | 20.00% |
-| synth_128 | Genetic Algorithm | 1.9880s | 0.2321 | 6.8 | 0.75 | 36.00% |
-| synth_128 | Harmony Search | 0.1886s | 0.0481 | 34.9 | 1.30 | 598.00% |
-| synth_256 | ILP Exact Solver | 1.3301s | -- | 7.0 | -- | 0.00% |
-| synth_256 | Greedy Heuristic | 0.0008s | 0.0000 | 8.0 | 0.00 | 14.29% |
-| synth_256 | Genetic Algorithm | 2.4335s | 0.1710 | 12.1 | 1.14 | 72.86% |
-| synth_256 | Harmony Search | 0.3056s | 0.0243 | 85.1 | 2.21 | 1115.71% |
-| synth_512 | ILP (60s timeout) | 60.1023s | -- | 9.0 | -- | 0.00% |
-| synth_512 | Greedy Heuristic | 0.0114s | 0.0018 | 10.0 | 0.00 | 11.11% |
-| synth_512 | Genetic Algorithm | 12.3715s | 2.9132 | 43.9 | 2.02 | 387.78% |
-| synth_512 | Harmony Search | 2.7264s | 0.0712 | 192.7 | 6.91 | 2041.11% |
-| synth_1024 | ILP (60s timeout) | 60.2144s | -- | 11.0 | -- | 0.00% |
-| synth_1024 | Greedy Heuristic | 0.0136s | 0.0026 | 11.0 | 0.00 | 0.00% |
+### Table 2: Synthetic Scaling Suite (10 trials per stochastic algorithm)
 
-*Note: Results for synth_1024 GA, synth_1024 HS, and synth_2048 (all algorithms) were not fully captured before the benchmark run was interrupted. A complete re-run is needed to populate those rows. ILP results for synth_512 and synth_1024 reflect the best feasible solution found within the 60-second timeout, not proven optima.*
+| Instance | Algorithm | Runtime Avg | Runtime Std | Cover Avg | Cover Std | Optimality Gap |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| synth_64 | ILP Exact Solver | 0.0452s | -- | 4.0 | -- | 0.00% (baseline) |
+| synth_64 | Greedy Heuristic | 0.0001s | 0.0000 | 4.0 | 0.00 | 0.00% |
+| synth_64 | Genetic Algorithm | 1.5096s | 0.1004 | 4.2 | 0.40 | 5.00% |
+| synth_64 | Harmony Search | 0.0734s | 0.0100 | 13.2 | 1.94 | 230.00% |
+| synth_128 | ILP Exact Solver | 0.0372s | -- | 5.0 | -- | 0.00% (baseline) |
+| synth_128 | Greedy Heuristic | 0.0004s | 0.0000 | 6.0 | 0.00 | 20.00% |
+| synth_128 | Genetic Algorithm | 1.7164s | 0.0166 | 7.3 | 0.64 | 46.00% |
+| synth_128 | Harmony Search | 0.1368s | 0.0108 | 34.2 | 1.72 | 584.00% |
+| synth_256 | ILP Exact Solver | 1.3301s | -- | 7.0 | -- | 0.00% (baseline) |
+| synth_256 | Greedy Heuristic | 0.0008s | 0.0000 | 8.0 | 0.00 | 14.29% |
+| synth_256 | Genetic Algorithm | 2.2220s | 0.0212 | 12.5 | 1.36 | 78.57% |
+| synth_256 | Harmony Search | 0.2598s | 0.0095 | 85.0 | 2.53 | 1114.29% |
+| synth_512 | ILP (60s timeout) | 60.1023s | -- | 9.0 | -- | 0.00% (baseline) |
+| synth_512 | Greedy Heuristic | 0.0039s | 0.0002 | 10.0 | 0.00 | 11.11% |
+| synth_512 | Genetic Algorithm | 8.6434s | 5.0201 | 40.7 | 3.20 | 352.22% |
+| synth_512 | Harmony Search | 2.6979s | 0.1067 | 194.0 | 6.99 | 2055.56% |
+| synth_1024 | ILP (60s timeout) | 60.2144s | -- | 11.0 | -- | 0.00% (baseline) |
+| synth_1024 | Greedy Heuristic | 0.0319s | 0.0021 | 11.0 | 0.00 | 0.00% |
+| synth_1024 | Genetic Algorithm | 23.7461s | 0.2468 | 189.1 | 5.47 | 1619.09% |
+| synth_1024 | Harmony Search | 1.8789s | 1.4537 | 424.3 | 7.20 | 3757.27% |
+| synth_2048 | ILP Exact Solver | Intractable | -- | -- | -- | -- |
+| synth_2048 | Greedy Heuristic | 0.0913s | 0.0033 | 14.0 | 0.00 | N/A |
+| synth_2048 | Genetic Algorithm | 23.1047s | 1.0852 | 547.8 | 8.51 | N/A |
+| synth_2048 | Harmony Search | 2.3779s | 0.0425 | 897.1 | 6.33 | N/A |
+
+*ILP for synth_512 and synth_1024 hit the 60-second execution timeout and reflect the best feasible solution found rather than a proven global optimum. ILP was not run on synth_2048 as it is computationally intractable at that scale within a practical time limit.*
 
 ---
 
