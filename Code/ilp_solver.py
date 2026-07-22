@@ -64,6 +64,7 @@ def run_ilp_solver(subsets, universe_size, time_limit_sec=60):
         if pulp.value(x[j]) is not None and pulp.value(x[j]) >= 0.99:
             best_chromosome[j] = 1
 
-    best_fitness = int(round(pulp.value(prob.objective)))
+    obj_val = pulp.value(prob.objective)
+    best_fitness = int(round(obj_val)) if obj_val is not None else sum(best_chromosome)
 
     return best_chromosome, best_fitness
