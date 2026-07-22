@@ -87,8 +87,6 @@ On the real-world benchmark instance, both GA and Harmony Search matched the exa
 
 ### Table 2: Synthetic Scaling Suite (10 trials per stochastic algorithm)
 
-### Table 2: Synthetic Scaling Suite (10 trials per stochastic algorithm)
-
 | Instance | Algorithm | Runtime Avg | Runtime Std | Cover Avg | Cover Std | Optimality Gap |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | synth_64 | ILP Exact Solver | 0.0452s | -- | 4.0 | -- | 0.00% (baseline) |
