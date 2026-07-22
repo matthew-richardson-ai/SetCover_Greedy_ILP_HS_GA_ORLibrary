@@ -1,7 +1,7 @@
 # Empirical Performance Analysis of Approximation, Metaheuristic, and Exact Algorithms for the Unweighted Set Cover Problem
 
-**Course:** CSC 2400 — Design and Analysis of Algorithms
-**Authors:** Ian Phillips, Abdullah Javed, Matthew Richardson
+**Course:** CSC 2400 — Design and Analysis of Algorithms  
+**Authors:** Ian Phillips, Abdullah Javed, Matthew Richardson  
 **Repository:** [SetCover_Greedy_ILP_HS_GA_ORLibrary](https://github.com/matthew-richardson-ai/SetCover_Greedy_ILP_HS_GA_ORLibrary)
 
 ---
