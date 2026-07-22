@@ -7,6 +7,25 @@ Description:
     Main execution driver for running single benchmark instances and
     automated scaling experiments across Greedy, GA, Harmony Search, and ILP.
 ===============================================================================
+HOW TO RUN (from the project root directory: CSC2400_Project/):
+
+    Full benchmark experiment (all instances, all algorithms):
+        python -m Code.main
+
+    Plots only (after experiment has been run at least once):
+        python -m Code.generate_plots
+
+    Regenerate synthetic datasets only:
+        python Code/generate_synthetic.py
+
+Requirements:
+    pip install -r requirements.txt
+
+Output:
+    Results/benchmark_metrics_latest.csv       -- raw benchmark data
+    Tables & Graphs/scaling_runtime_comparison.png
+    Tables & Graphs/solution_quality_comparison.png
+===============================================================================
 """
 
 import csv

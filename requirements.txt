@@ -2,9 +2,8 @@
 numpy>=1.24.0
 pandas>=2.0.0
 
-# Plotting and data visualization (Matthew's deliverables)
+# Plotting and data visualization
 matplotlib>=3.7.0
-seaborn>=0.12.0
 
-# ILP Optimization Solver (Ian's deliverable)
+# ILP Optimization Solver
 pulp>=2.7.0
