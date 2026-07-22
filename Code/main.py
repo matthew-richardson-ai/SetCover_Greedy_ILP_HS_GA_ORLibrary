@@ -24,6 +24,7 @@ HOW TO RUN THIS CODE FROM THE COMMAND LINE (CMD / TERMINAL):
 import csv
 import os
 import time
+from datetime import datetime
 import numpy as np
 
 # Pulls the main execution loop for our algorithms from their companion modules
@@ -78,7 +79,7 @@ def load_or_library_instance(file_path):
 
         for _ in range(num_covering_columns):
             # CRITICAL OPTIMIZATION: OR-Library data uses 1-based indexing (1 to N).
-            # Python arrays use 0-based indexing (0 to N-1). We must subtract 1 here!
+            # Python arrays use 0-based indexing (0 to N-1). ** Mental note: We must subtract 1 here.
             col_idx = int(next(token_iter)) - 1
 
             # Map this universe element directly into the subset that owns it
@@ -92,7 +93,7 @@ def main():
     print("      CSC 2400: UNWEIGHTED SET COVERING PROBLEM BENCHMARK DRIVER      ")
     print("=" * 70)
 
-    # This points directly to the data file inside your references folder.
+    # This points directly to the data file inside references folder.
     # Swap out 'scp41.txt' with any other benchmark instance file to test different sets.
     target_instance = "References/scp41.txt"
 
@@ -103,7 +104,7 @@ def main():
         print(f"[DATA LOG] Success! Target Universe Size : {universe_size} elements")
         print(f"[DATA LOG] Success! Total Available Subsets: {len(subsets)}\n")
 
-        # 2. Setup your algorithm configuration parameters
+        # 2. Setup algorithm configuration parameters
         print("[ENGINE] Booting up Genetic Algorithm optimization loop...")
         pop_size = 100  # How many candidate solutions exist in our gene pool
         generations = 300  # How many evolutionary steps we run before stopping
@@ -147,7 +148,7 @@ def main():
 
         greedy_execution_runtime = time.time() - start_time_greedy
 
-        # 4. Final output display for your professor's grading script / team analysis
+        # 4. Final output display
         print("\n" + "=" * 50)
         print("                 BENCHMARK METRICS SUMMARY        ")
         print("=" * 50)
@@ -189,7 +190,14 @@ def run_full_experiment():
         "References/Synthetic/synth_2048.txt",
     ]
 
-    results_file = "Results/benchmark_metrics.csv"
+    # Generate current execution timestamp (YYYY-MM-DD_HHMMSS)
+    # Found it necessary for timestamps during benchmark runs
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+
+    # Output to both a unique timestamped file and a latest reference file
+    results_file = f"Results/benchmark_metrics_{timestamp}.csv"
+    latest_file = "Results/benchmark_metrics_latest.csv"
+
     headers = [
         "Instance",
         "Algorithm",
@@ -202,133 +210,144 @@ def run_full_experiment():
     ]
 
     print("==================================================")
-    print("        LAUNCHING LIVE BENCHMARK ENGINE           ")
+    print(f"  LAUNCHING LIVE BENCHMARK ENGINE [{timestamp}]   ")
     print("==================================================")
 
     os.makedirs("Results", exist_ok=True)
 
-    with open(results_file, mode="w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(headers)
+    # Open both target CSV files to write metrics dynamically throughout the run
+    for target_path in [results_file, latest_file]:
+        with open(target_path, mode="w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(headers)
 
-        for instance in instances:
-            print(f"\n[BENCHMARK] Processing: {instance}")
+    # Benchmark processing loop
+    for instance in instances:
+        print(f"\n[BENCHMARK] Processing: {instance}")
 
-            # 1. Load the actual data using your existing parser
-            subsets, universe_size = load_or_library_instance(instance)
+        # 1. Load the actual data using the existing parser
+        subsets, universe_size = load_or_library_instance(instance)
 
-            # --- GREEDY HEURISTIC TRIALS ---
-            greedy_runtimes = []
-            greedy_covers = []
+        # --- GREEDY HEURISTIC TRIALS ---
+        greedy_runtimes = []
+        greedy_covers = []
 
-            for trial in range(10):
-                start_time = time.time()
-                best_chromosome, best_fitness = run_greedy_approach(
-                    subsets, universe_size
-                )
-                end_time = time.time()
+        for trial in range(10):
+            start_time = time.time()
+            best_chromosome, best_fitness = run_greedy_approach(subsets, universe_size)
+            end_time = time.time()
 
-                greedy_runtimes.append(end_time - start_time)
-                greedy_covers.append(best_fitness)
+            greedy_runtimes.append(end_time - start_time)
+            greedy_covers.append(best_fitness)
 
-            greedy_runtime_avg = np.mean(greedy_runtimes)
-            greedy_runtime_std = np.std(greedy_runtimes)
-            greedy_cover_avg = np.mean(greedy_covers)
-            greedy_cover_std = np.std(greedy_covers)
+        greedy_runtime_avg = np.mean(greedy_runtimes)
+        greedy_runtime_std = np.std(greedy_runtimes)
+        greedy_cover_avg = np.mean(greedy_covers)
+        greedy_cover_std = np.std(greedy_covers)
 
-            writer.writerow([
-                os.path.basename(instance),
-                "Greedy Heuristic",
-                10,
-                f"{greedy_runtime_avg:.4f}",
-                f"{greedy_runtime_std:.4f}",
-                f"{greedy_cover_avg:.1f}",
-                f"{greedy_cover_std:.2f}",
-                "TBD (Awaiting ILP Baseline)",
-            ])
-            print(
-                f" -> Finished Greedy 10 trials. Avg Runtime: {greedy_runtime_avg:.4f}s | Avg Cover: {greedy_cover_avg:.1f}"
+        greedy_row = [
+            os.path.basename(instance),
+            "Greedy Heuristic",
+            10,
+            f"{greedy_runtime_avg:.4f}",
+            f"{greedy_runtime_std:.4f}",
+            f"{greedy_cover_avg:.1f}",
+            f"{greedy_cover_std:.2f}",
+            "TBD (Awaiting ILP Baseline)",
+        ]
+
+        for target_path in [results_file, latest_file]:
+            with open(target_path, mode="a", newline="") as f:
+                csv.writer(f).writerow(greedy_row)
+
+        print(
+            f" -> Finished Greedy 10 trials. Avg Runtime: {greedy_runtime_avg:.4f}s | Avg Cover: {greedy_cover_avg:.1f}"
+        )
+
+        # --- GENETIC ALGORITHM TRIALS ---
+        ga_runtimes = []
+        ga_covers = []
+
+        # Run 10 independent trials for standard deviation
+        for trial in range(10):
+            start_time = time.time()
+
+            # 2. Run Genetic Algorithm loop
+            best_chromosome, best_fitness = run_genetic_algorithm(
+                subsets, universe_size
             )
 
-            # --- GENETIC ALGORITHM TRIALS ---
-            ga_runtimes = []
-            ga_covers = []
+            end_time = time.time()
 
-            # Run 10 independent trials per file to collect standard deviation
-            for trial in range(10):
-                start_time = time.time()
+            ga_runtimes.append(end_time - start_time)
+            ga_covers.append(best_fitness)
 
-                # 2. Run your actual Genetic Algorithm loop
-                best_chromosome, best_fitness = run_genetic_algorithm(
-                    subsets, universe_size
-                )
+        # Compute statistical metrics
+        runtime_avg = np.mean(ga_runtimes)
+        runtime_std = np.std(ga_runtimes)
+        cover_avg = np.mean(ga_covers)
+        cover_std = np.std(ga_covers)
 
-                end_time = time.time()
+        ga_row = [
+            os.path.basename(instance),
+            "Genetic Algorithm",
+            10,
+            f"{runtime_avg:.4f}",
+            f"{runtime_std:.4f}",
+            f"{cover_avg:.1f}",
+            f"{cover_std:.2f}",
+            "TBD (Awaiting ILP Baseline)",
+        ]
 
-                ga_runtimes.append(end_time - start_time)
-                ga_covers.append(best_fitness)
+        for target_path in [results_file, latest_file]:
+            with open(target_path, mode="a", newline="") as f:
+                csv.writer(f).writerow(ga_row)
 
-            # Compute statistical metrics requested by the instructor
-            runtime_avg = np.mean(ga_runtimes)
-            runtime_std = np.std(ga_runtimes)
-            cover_avg = np.mean(ga_covers)
-            cover_std = np.std(ga_covers)
+        print(
+            f" -> Finished GA 10 trials. Avg Runtime: {runtime_avg:.4f}s | Avg Cover: {cover_avg:.1f}"
+        )
 
-            # Write row to CSV
-            writer.writerow([
-                os.path.basename(instance),
-                "Genetic Algorithm",
-                10,
-                f"{runtime_avg:.4f}",
-                f"{runtime_std:.4f}",
-                f"{cover_avg:.1f}",
-                f"{cover_std:.2f}",
-                "TBD (Awaiting ILP Baseline)",
-            ])
-            print(
-                f" -> Finished GA 10 trials. Avg Runtime: {runtime_avg:.4f}s | Avg Cover: {cover_avg:.1f}"
-            )
+        # --- HARMONY SEARCH TRIALS ---
+        hs_runtimes = []
+        hs_covers = []
 
-            # --- HARMONY SEARCH TRIALS ---
-            hs_runtimes = []
-            hs_covers = []
+        for trial in range(10):
+            start_time = time.time()
+            best_chromosome, best_fitness = run_harmony_search(subsets, universe_size)
+            end_time = time.time()
 
-            for trial in range(10):
-                start_time = time.time()
-                best_chromosome, best_fitness = run_harmony_search(
-                    subsets, universe_size
-                )
-                end_time = time.time()
+            hs_runtimes.append(end_time - start_time)
+            hs_covers.append(best_fitness)
 
-                hs_runtimes.append(end_time - start_time)
-                hs_covers.append(best_fitness)
+        hs_runtime_avg = np.mean(hs_runtimes)
+        hs_runtime_std = np.std(hs_runtimes)
+        hs_cover_avg = np.mean(hs_covers)
+        hs_cover_std = np.std(hs_covers)
 
-            hs_runtime_avg = np.mean(hs_runtimes)
-            hs_runtime_std = np.std(hs_runtimes)
-            hs_cover_avg = np.mean(hs_covers)
-            hs_cover_std = np.std(hs_covers)
+        hs_row = [
+            os.path.basename(instance),
+            "Harmony Search",
+            10,
+            f"{hs_runtime_avg:.4f}",
+            f"{hs_runtime_std:.4f}",
+            f"{hs_cover_avg:.1f}",
+            f"{hs_cover_std:.2f}",
+            "TBD (Awaiting ILP Baseline)",
+        ]
 
-            # Write HS row to CSV
-            writer.writerow([
-                os.path.basename(instance),
-                "Harmony Search",
-                10,
-                f"{hs_runtime_avg:.4f}",
-                f"{hs_runtime_std:.4f}",
-                f"{hs_cover_avg:.1f}",
-                f"{hs_cover_std:.2f}",
-                "TBD (Awaiting ILP Baseline)",
-            ])
-            print(
-                f" -> Finished HS 10 trials. Avg Runtime: {hs_runtime_avg:.4f}s | Avg Cover: {hs_cover_avg:.1f}"
-            )
+        for target_path in [results_file, latest_file]:
+            with open(target_path, mode="a", newline="") as f:
+                csv.writer(f).writerow(hs_row)
+
+        print(
+            f" -> Finished HS 10 trials. Avg Runtime: {hs_runtime_avg:.4f}s | Avg Cover: {hs_cover_avg:.1f}"
+        )
 
     print("\n==================================================")
     print(f"[SUCCESS] Batch execution complete. Saved to: {results_file}")
     print("==================================================")
 
 
-# This replaces your old single-run block
 if __name__ == "__main__":
     run_full_experiment()
     main()
