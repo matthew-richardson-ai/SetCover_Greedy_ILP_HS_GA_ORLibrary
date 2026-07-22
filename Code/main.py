@@ -31,6 +31,7 @@ import numpy as np
 from Code.genetic_algorithm import run_genetic_algorithm
 from Code.greedy_solvers import run_greedy_approach
 from Code.harmony_search import run_harmony_search
+from Code.generate_plots import generate_benchmark_plots
 
 
 def load_or_library_instance(file_path):
@@ -346,6 +347,10 @@ def run_full_experiment():
     print("\n==================================================")
     print(f"[SUCCESS] Batch execution complete. Saved to: {results_file}")
     print("==================================================")
+
+    # Automatically trigger plot generation using the newly written CSV
+    print("\n[PIPELINE] Launching plotting engine...")
+    generate_benchmark_plots()
 
 
 if __name__ == "__main__":
