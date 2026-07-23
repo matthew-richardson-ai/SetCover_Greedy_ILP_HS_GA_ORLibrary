@@ -155,7 +155,6 @@ Several limitations should be acknowledged when interpreting these results:
 - The synthetic data was randomly generated with full coverage guaranteed per element, which may create problem structures that are unusually favorable to greedy selection. Real-world instances with adversarial or sparse structure may tell a different story.
 - Metaheuristic parameters were not tuned per instance size. A properly tuned GA or HS at larger scales could close a significant portion of the observed optimality gap.
 - ILP could only prove optimality on instances up to n = 256. For n = 512 and n = 1024, the "optimal" value used for gap calculations is a lower bound, not a certified global optimum.
-- Results for synth_1024 GA/HS and all synth_2048 instances were not captured in the final run and are not included in the tables above.
 
 ### 5.6 What We Would Do Differently
 
